@@ -152,6 +152,14 @@ hu = apply_modality_lut(arr, ds)
 #print(ds.Columns)
 #print(ds.Rows)
 
+
+def
+normalisedArrays = []
+for norm in calibrateArrays:
+    normalised = 7*calibrateArrays((calibrateArrays+3)/(2+3))
+    normalisedArrays.append(normalised)
+
+
 plt.imshow(ds.pixel_array[5,:,:])
 plt.show()
 
