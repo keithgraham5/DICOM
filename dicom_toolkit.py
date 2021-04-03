@@ -165,3 +165,13 @@ plt.show()
 
 plt.imshow(ds.pixel_array[30,:,:])
 plt.show()
+
+'''The iterable is an object with elements that can be looped over.Directory containing dicom files
+The iterator variable (typically i for index) stores a portion
+of the iterable when the for loop is being executed.
+Each dicom file is stores in (i) if it end .dcm
+Each DICOM file is appened to out empty list [dicom_files]
+Lexixal scoping varible are determined entirely by the location in the souce code(i) is a local namespace within openFiles() hence it does
+not clash with loops in other functions
+local namespaces cannot be seen or reffered to outside the function
+'''

@@ -11,9 +11,11 @@ def, function, lexical scoping (local, nonlocal, global)
 
 '''
 import glob
-import numpy as np
-import pydicom as dicom
 import matplotlib.pyplot as plt
+import numpy as np
+import os
+import pydicom as dicom
+
 
 
 #file paths
@@ -29,29 +31,19 @@ class Dicom:
 
 #loop through directory identiying files ending with .dcm
     def loopDicomFiles(self):
-'''
-The iterable is an object with elements that can be looped over.
-    Directory containing dicom files
-The iterator variable (typically i for index) stores a portion
-of the iterable when the for loop is being executed.
-    Each dicom file is stores in (i) if it end .dcm
-Each DICOM file is appened to out empty list [dicom_files]
-Lexixal scoping varible are determined entirely by the location in the souce code
-    (i) is a local namespace within openFiles() hence it does
-    not clash with loops in other functions
-    local namespaces cannot be seen or reffered to outside the function
-'''
+
 # def loopDicomFile(self):
 # openedFiles = [] # empty list
 # for i in glob.iglob('/Users/keithgraham/PycharmProjects/ICT/RD/**/*.dcm', recursive=True):
 #     if i.endswith('.dcm'): # if file in loop ends with .dcm
 #         openedFiles.append(i) #append said file ending in dcm to emtpy list
 
-    openedFiles = []
-    for i in os.listdir(self.src):
-        if i.endswith(".dcm"):
-            openedFiles.append(i)
-    print(openedFiles)
+        openedFiles = []
+        for i in os.listdir(self.src):
+            if i.endswith(".dcm"):
+                openedFiles.append(i)
+            return(openedFiles)
+            print(openedFiles)
 
     # def readDicomFile(self):
     # readFiles = []
@@ -74,7 +66,7 @@ Lexixal scoping varible are determined entirely by the location in the souce cod
     # for beam in calibratedFiles:
     #     combineArray = combineArray + beam
 
-Dicom()
+Dicom(src)
 #Main program
 
 #
