@@ -4,6 +4,7 @@ import os
 import glob
 import numpy as np
 import pydicom as dicom
+from PIL import Image
 import matplotlib.pyplot as plt
 
 
@@ -41,5 +42,8 @@ ds10 = dataset10.pixel_array * dataset10.DoseGridScaling
 # Add pixel array together
 dataset_combined = ds1 + ds2 + ds3 + ds4 + ds5 + ds6 + ds7 + ds8 + ds9 +ds10
 
+
+
 plt.imshow(dataset_combined[30,:,:])
 plt.show()
+

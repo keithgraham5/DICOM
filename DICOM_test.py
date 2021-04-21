@@ -30,7 +30,7 @@ class Dicom:
         self.src = src
 
 #loop through directory identiying files ending with .dcm
-    def loopDicomFiles(self):
+    def loop_dicom_files(self):
 
 # def loopDicomFile(self):
 # openedFiles = [] # empty list
@@ -42,31 +42,42 @@ class Dicom:
         for i in os.listdir(self.src):
             if i.endswith(".dcm"):
                 openedFiles.append(i)
-            return(openedFiles)
-            print(openedFiles)
 
-    # def readDicomFile(self):
-    # readFiles = []
-    # for i in openedFiles:
-    #     dataset = dicom.dcmread(images)
-    #     readFiles.append(dataset)
-    #
-    # def calibrateDicomArrays(self):
-    # calibratedFiles = []
-    # for i in readFiles:
-    #     calibrateArray = arry.pixel_array * arry.DoseGridScaling
-    #     calibratedFiles.append(calibrateArray)
-    #
-    #
-    #
-    # def calibrateArrays(self):
-    # z, x, y = calibratedFiles[0].shape
-    # combineArray = np.zeros([z, x, y])
-    #
-    # for beam in calibratedFiles:
-    #     combineArray = combineArray + beam
+    def read_dicom_file(self):
+        readFiles = []
+        for i in self:
+            dataset = dicom.dcmread(i)
+            readFiles.append(dataset)
 
-Dicom(src)
+    def calibrate_dicom_arrays(self):
+        calibratedFiles = []
+        for i in self:
+            calibrateArray = arry.pixel_array * arry.DoseGridScaling
+            calibratedFiles.append(calibrateArray)
+
+
+    def combine_arrays(self):
+        z, x, y = calibratedFiles[0].shape
+        combineArray = np.zeros([z, x, y])
+
+        for beam in self:
+            combineArray = combineArray + beam
+
+    def EQ_arrray(self):
+        '''array.shape '''
+        m, n, o = array.shape
+        for i in range(n)
+            for j in range(m)
+                for h in range (o)
+event = Dicom(src)
+event.loop_dicom_files()
+event.read_dicom_file()
+event.calibrate_dicom_arrays()
+event.combine_arrays()
+
+
+
+
 #Main program
 
 #

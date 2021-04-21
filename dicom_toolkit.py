@@ -23,12 +23,25 @@ import os
 import matplotlib.pyplot as plt
 
 # Source filepaths
+onesrc = '/Users/keithgraham/PycharmProjects/ICT/RD/RD.1.2.826.0.1.3680043.2.526.552059069.15966253338440.43870.dcm'
 src = '/Users/keithgraham/PycharmProjects/ICT/RD'
 filepath = '/Users/keithgraham/Desktop/01. Rotations /ICT /RD'
 
 #destination filepaths
 dst = '/Users/keithgraham/PycharmProject/ICT/DICOM_complete'
 
+#numpy
+'''The shape fo an array is the number of elements in each dimension
+Numpy arrsy have an attribute called shape that returns a tuple with
+ each index having the number corresponsing elements'''
+array.shape
+
+#os.listdir
+'''returns a list containning the names of the entrie in the directory given by path '''
+dicom_files = []
+for i in os.listdir(src):
+    if i.endswith(".dcm"):
+        dicom_files.append(i)
 
 
 # matplotlib
@@ -60,6 +73,7 @@ for i in range(len(object))
 
 # pydicom
 dataset = dicom.dcmread('path/to/file')
+ds.pixel_array.shape
 
 
 
@@ -175,3 +189,100 @@ Lexixal scoping varible are determined entirely by the location in the souce cod
 not clash with loops in other functions
 local namespaces cannot be seen or reffered to outside the function
 '''
+
+
+
+
+'''makes the dicom file readable then converts the 1D image data a ndarray. From this ndarray we can get its shape or dimensions
+and print this infomration to the screen'''
+# ds = dicom.dcmread('/Users/keithgraham/PycharmProjects/ICT/RD/RD.1.2.826.0.1.3680043.2.526.552059069.15966253338440.43870.dcm')
+# print(ds.pixel_array.shape)
+
+'''Converting a DICOM image to a jpeg'''
+
+import numpy as np
+import pydicom as dicom
+from PIL import Image
+import os
+
+# im = dicom.dcmread('/Users/keithgraham/PycharmProjects/ICT/RD/RD.1.2.826.0.1.3680043.2.526.552059069.15966253338440.43870.dcm')
+# im = im.pixel_array.astype(float)
+# rescaled_image = (np.maximum(im,0)/im.max())*255
+# final_image = np.uint8(rescaled_image)
+#
+# final_image =Image.fromarray(final_image)
+
+def get_names(path):
+    '''Function will get all the names form a folder. The loop will return 3 types of data,
+    the root, the directory name and the file name (the root refers to the top level directory of a file '''
+    names = [] #create an empty list
+    for root, dirnames, filenames in os.walk(path):
+        for filename in filenames:
+            _, ext = os.path.splitext(filename)#spliting the extenstion to see if the image extension containts dicom, the split is stores in to two variables
+            if ext in ['.dcm']:# now we see if the variable extension is .dcm or not
+                names.append(filename)# if the extension is DCM then append this name to the names[]
+
+    return names
+
+
+def convert_dcm_jpeg(dicom_file, slice_no):# # each time the convert_dcm_jpeg function is called and passed the loop variable from
+    #below (argument (name) into the parameter (dicom_file) an object is created.
+    # path = '/Users/keithgraham/PycharmProjects/ICT/RD/' + name
+    # dicom_heading = dicom.dcmread(path)
+    dicom_heading = dicom.dcmread('/Users/keithgraham/PycharmProjects/ICT/RD/' + dicom_file)  #When the object is passed
+    # the function it object is maniplates sohere we are making the object readable sing dicom.dcmread
+    # dicom_heading = dicom.dcmread(name) does not work needs directory to file
+    #print(dicom_heading.pixel_array.shape) this just prints our the shape of thep i[ixel array
+    all_slices_from_individual_dicom_file = dicom_heading.pixel_array.astype(float)# each dicom file represents an
+    # individual beam, each beam is composed of 71 slices, the dicom.dcmread provides a readable version of our Dicom
+    # file to thevariable dicom_heading. This variable will also contain pixel data for each of the 71 slices.
+    # we want to extract that pixel data and convert to a numpy array hence .pixel_array returns the pixel data as a numpy.ndarray
+    #As we are going to be performing computational calculation on those values we want to convert all pixel to a flaot
+    # The values we are dealing with the a pixel array are typicall whole number. if we divide a whole number by a whole
+    # number we end up decimal places. Python will try and keep things as simple as possible so if we give it a
+    # Whole number to dived by python will give us a whole number in return. if we divide 1 by 3 (1//3) for example we get 0.
+    # when what we should get is 0.3333 losing.
+        #if you type in 1/3 python sees this as a fraction not a dividision and returns it as 0.3333
+    #So if the image is in integer why convert to a pixel_array. Well Dicom images are stores as 1D human unreadable
+    # datasets so pixel_array converts and structures this data into human readable, so as previosuly mentioned the
+    # reason we ensure everything in the array is treated as a float is to maintian precison durint calculaltiosn
+    individual_slice_from_each_dicom = all_slices_from_individual_dicom_file[slice_no, :, :]
+    #Here we start to access the individual pixel arrays from each slice of the DICOM file
+    #Here we use the second argument passed up form the loop in the function call to the parameter of def convert_dcm_jpeg.
+    #the second variable passed into the funciton is used to call upon the coordinate along the z,x,y. (71, 128, 176)
+    #so far we have one Dicom file we passed as a loop variable form which we select 1 of its slices based on the lopp
+    # varialbe being used to access the z coodinates. if you look back up to the top of our code you can see that we
+    # make the the dicom files readable using the dicom.dcmread. this is essntially a function with a lot of hidden
+    # functinalities. These functinoalites enable python to undestand that when we give it an array coordinate python
+    # know what we are looking for. So dcmread is not just open and read me, it telling python this is how to read me.
+    # coordinates which we passed in as a variable. Both loop variable were created in the function call but not defined
+    #untill passed into the def  convert_dcm_to jpeg()
+    rescaled_image = (np.maximum(individual_slice_from_each_dicom,0)/individual_slice_from_each_dicom.max())*255
+    # So now we an individual Dicom file from which we have obtained acess to an indiviudal slice of that file and that
+    # slice we now represent as a pixel array.
+    # now we need to reshape the pixel array into the same dimension as a the jpeg so we need to normalise or data
+    # we normalise each data point in the pixel by adding and/or multipleing by constaints so that values fall between
+    # 0 and 1
+    # above we have two arrays, both of these arrays are the same. np.maximum compares both of these arrays.
+    # from the first array we set the lowest number wheater negatibe or positive to zero. any nummber obove this will
+    # then be greater than zero
+    # we then call upon the data from a second array (same data, same array) and called the maximum number in the arrray.
+    # Dvididing these two numbers between each other essentially place all those numbers in the array between between 0 and 1.
+    # Then we multille by 255 as 0 = black and 255 = peak white so everything inbetween can be expresssed as grey scale
+    final_image = np.uint8(rescaled_image)
+    # unit8 data type uses unsigned 8 bit integers which is the range of a pixel so essnetially we are making our image
+    # machine readable again
+    final_image =Image.fromarray(final_image)#
+    # here we are simple creating an image memeory from obhect exporint the array
+    return final_image
+    #here we are retruning this image back to the line
+
+names = get_names('/Users/keithgraham/PycharmProjects/ICT/RD/')
+
+for name in names: #loops through the names list created by the calling of the function get_names
+    # print(name) #as each loop variable enters the name variable the filename is printed
+    # for slice in range(71)#each file contains 71 slices through which the for loop iterates over
+    for slice in range(0, len(name) -1):#same as above except using the len function to sum the total number of files in the (see convert_dcm_jpeg)
+        image = convert_dcm_jpeg(name, slice) # we call the convert_dcm_jpeg function with two arguments required (the loop variable name and the slice variable
+        image.save(name+'_'+ str(slice) +'.jpg')
+        print("saved")
