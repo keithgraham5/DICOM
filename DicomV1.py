@@ -1,12 +1,28 @@
+'''DICOM Tool box of functions.
 
+Library of the functions for DICOM processing
+
+Each series consists of Dicom files, each Dicom file represents a different RT dose beam hitting the tumour
+and plus number of stabilising beams.  Each Dicom consists of a header and image data set. The information
+within the header is organized as a constant and standardized series of tags. The image is stored as pixel_data
+which can be returned to the caller as a numpy. Each array shape is [Z, X, Y] [71, 128, 176]. This toolkit
+enables the parsing of Dicom components, calibrates the pixel array data and combine the data from each beam
+to create an image.
+
+Author: K F Graham
+Version 1
+
+
+Package included:
+
+Python 3.8.8
+matplotlib -> for visualizations
+plotly -> for interactive visualization
+pydicom -> for working with DICOM files
+'''
 # import
-import os
-import glob
-import numpy as np
 import pydicom as dicom
-from PIL import Image
 import matplotlib.pyplot as plt
-
 
 #file paths
 src = '/Users/keithgraham/PycharmProjects/ICT/RD'
@@ -38,7 +54,7 @@ ds8 = dataset8.pixel_array * dataset8.DoseGridScaling
 ds9 = dataset9.pixel_array * dataset9.DoseGridScaling
 ds10 = dataset10.pixel_array * dataset10.DoseGridScaling
 
-
+print(ds1.shape)
 # Add pixel array together
 dataset_combined = ds1 + ds2 + ds3 + ds4 + ds5 + ds6 + ds7 + ds8 + ds9 +ds10
 
