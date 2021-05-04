@@ -23,6 +23,7 @@ pydicom -> for working with DICOM files
 # import
 import pydicom as dicom
 import matplotlib.pyplot as plt
+import numpy as np
 
 #file paths
 src = '/Users/keithgraham/PycharmProjects/ICT/RD'
@@ -55,6 +56,9 @@ ds9 = dataset9.pixel_array * dataset9.DoseGridScaling
 ds10 = dataset10.pixel_array * dataset10.DoseGridScaling
 
 print(ds1.shape)
+
+x, y = ds10[1].shape
+print(x)
 # Add pixel array together
 dataset_combined = ds1 + ds2 + ds3 + ds4 + ds5 + ds6 + ds7 + ds8 + ds9 +ds10
 
