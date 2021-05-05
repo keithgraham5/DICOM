@@ -74,3 +74,6 @@ dicom_components = parse_dicom_files(dicom_list)
 calibrated = calibrate_arrays(dicom_components)
 carry = create_fill_empty_arry(calibrated)
 image = visulise(carry)
+
+
+
