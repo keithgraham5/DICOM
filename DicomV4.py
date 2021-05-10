@@ -1,13 +1,13 @@
-'''DICOM Tool box of functions.
+'''DICOM Toolbox of functions.
 
-Library of the functions for DICOM processing
+Library of functions for DICOM RT Dose processing
 
 Each series consists of Dicom files, each Dicom file represents a different RT dose beam targeting the tumour.
 Each Dicom consists of a header and image data set. The information within the header is organized as a constant
 and standardized series of tags. The image is stored as pixel_data which can be returned to the caller as a
-numpy array. Each array shape has [Z, X, Y] coordinates (e.g. [71, 128, 176]). This toolkit enables the parsing
-of Dicom components, calibrates the pixel array data to the equililvalent dose in 2Gy fractions (EQD2) and combine
-the data from each beam to create an image.
+numpy array. Each array shape has [Z, X, Y] coordinates (e.g. [71, 128, 176]) representing each voxel. This
+toolkit enables the parsing of Dicom file components, the calibration of the pixel array data with to the
+equivalent dose in 2Gy fractions (EQD2) and combine the data from each beam to create an image.
 
 EQD2 Formula
 EQD2 = D * ([d +(a/b)] / [2+ (a/b)])
@@ -17,16 +17,17 @@ a/b = dose at which the linear and quadratic components of cell kill are equal
 n = number of fractions
 
 Author: K F Graham
+
 Version 4
-Addtion of EQD2 function.
+    Addition of EQD2 functionality.
 
 Package included:
-
+glob ->  searches for all the pathnames matching pattern
+numpy -> for computing application
+matplotlib -> for visualizations
+pydicom -> for working with DICOM files
 Python 3.8.8
-glob >  searches for all the pathnames matching pattern
-numpy > for computing application
-matplotlib -> for visulizations
-pydicom > for working with DICOM files'''
+'''
 
 import glob
 import numpy as np
@@ -37,7 +38,7 @@ import matplotlib.pyplot as plt
 src = '/Users/keithgraham/PycharmProjects/ICT/RD'
 dst = '/Users/keithgraham/PycharmProject/ICT/DICOM_complete'
 
-#n = float(input("What was the number of fraction?"))
+n = float(input("What was the number of fraction?"))
 
 def list_dcm_files(src):
     '''Directory iteration over an iterable filepath to create list of the files ending in .dcm'''
@@ -81,7 +82,7 @@ def sum_beams(calibrated_pixel_arrays):
     z, x, y = calibrated_pixel_arrays[0].shape
     EQD2_arry = np.zeros([z, x, y])
     for each_beam in calibrated_pixel_arrays:
-        EQD2_arry = EQD2_arry + EQD2_equation(each_beam, 15)
+        EQD2_arry = EQD2_arry + EQD2_equation(each_beam, n)
     return (EQD2_arry)
 
 
